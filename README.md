@@ -1,19 +1,47 @@
-# :earth_americas: GDP dashboard template
+import streamlit as st
+import pandas as pd
 
-A simple Streamlit app showing the GDP of different countries in the world.
+# Judul aplikasi
+st.title("Visualisasi Dataset dengan Pilihan Grafik")
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gdp-dashboard-template.streamlit.app/)
+# Input untuk mengunggah file dataset
+uploaded_file = st.file_uploader("https://raw.githubusercontent.com/ffzs/dataset/refs/heads/master/insurance.csv", type=["csv"])
 
-### How to run it on your own machine
+# Memeriksa apakah file telah diunggah
+if uploaded_file is not None:
+    # Membaca dataset
+    df = pd.read_csv(uploaded_file)
 
-1. Install the requirements
+    # Menampilkan dataset
+    st.write("Dataset:")
+    st.dataframe(df)
 
-   ```
-   $ pip install -r requirements.txt
-   ```
+    # Pilihan grafik
+    chart_type = st.selectbox(
+        "Pilih jenis grafik", 
+        ["Line Chart", "Bar Chart", "Area Chart"]
+    )
 
-2. Run the app
+    # Checkbox untuk memilih kolom yang ingin ditampilkan
+    columns = df.columns.tolist()
+    selected_columns = []
+    
+    st.write("Pilih kolom yang ingin ditampilkan:")
+    for column in columns:
+        if st.checkbox(column):
+            selected_columns.append(column)
 
-   ```
-   $ streamlit run streamlit_app.py
-   ```
+    # Menampilkan grafik untuk setiap kolom yang dipilih
+    if selected_columns:
+        for column in selected_columns:
+            st.subheader(f"Grafik untuk kolom: {column}")
+            
+            if chart_type == "Line Chart":
+                st.line_chart(df[column])
+            elif chart_type == "Bar Chart":
+                st.bar_chart(df[column])
+            elif chart_type == "Area Chart":
+                st.area_chart(df[column])
+
+else:
+    st.write("Silakan unggah file dataset untuk memulai.")
