@@ -16,6 +16,7 @@ if uploaded_file is not None:
     st.write("Dataset:")
     st.dataframe(df)
 
+
     # Pilihan grafik
     chart_type = st.selectbox(
         "Pilih jenis grafik", 
